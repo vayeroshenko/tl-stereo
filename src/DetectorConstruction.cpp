@@ -191,9 +191,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
 
     //////////////////////// World /////////////////////////////
     G4VSolid *worldSolid = new G4Box("World",
-                                     Const::worldSizeX/2,
-                                     Const::worldSizeY/2,
-                                     Const::worldSizeZ/2);
+                                     Const::worldSizeX/2.,
+                                     Const::worldSizeY/2.,
+                                     Const::worldSizeZ/2.);
 
     worldLogical = new G4LogicalVolume(worldSolid,
                                        Vacuum /*Air*/, // worldMaterial,
@@ -230,9 +230,9 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
                                      Const::acrylicBoxSizeX /2.,
                                      Const::acrylicBoxSizeY /2.,
                                      Const::acrylicBoxSizeZ /2.);
-    G4LogicalVolume *acrylicBoxLogical = new G4LogicalVolume(acrylicBox,
-                                                             Acrylic,
-                                                             "acrylicBox");
+    acrylicBoxLogical = new G4LogicalVolume(acrylicBox,
+                                            Acrylic,
+                                            "acrylicBox");
     new G4PVPlacement(0,
                       G4ThreeVector(0,0, Const::waterBoxSizeZ /2. + Const::acrylicBoxSizeZ /2.),
                       acrylicBoxLogical,
@@ -250,12 +250,12 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
                                       twopi);
 
     G4LogicalVolume *acrylicCupLogical1 = new G4LogicalVolume(acrylicCup,
-                                                             Acrylic,
-                                                             "acrylicCup1");
+                                                              Acrylic,
+                                                              "acrylicCup1");
 
     G4LogicalVolume *acrylicCupLogical2 = new G4LogicalVolume(acrylicCup,
-                                                             Acrylic,
-                                                             "acrylicCup2");
+                                                              Acrylic,
+                                                              "acrylicCup2");
 
 
 
@@ -277,21 +277,42 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
                       false,
                       0);
 
+    G4VSolid *pmtSphereSolid = new G4Sphere("pmtSphere",
+                                       0.,
+                                       Const::pmtRadius + 1.*mm,
+                                       0,
+                                       twopi,
+                                       pi/2,
+                                       pi/2);
 
-    G4VSolid *acrylicCupWater = new G4Tubs("acrylicCupWater",
-                                      0,
-                                      Const::pmtRadius,
-                                      (Const::pmtRadius + 1*mm)/2,
-                                      0,
-                                      twopi);
+    G4VSolid *acrylicCupWater_raw = new G4Tubs("acrylicCupWater_raw",
+                                           0,
+                                           Const::pmtRadius,
+                                           (Const::pmtRadius + 1*mm)/2,
+                                           0,
+                                           twopi);
 
-    G4LogicalVolume *acrylicCupWaterLogical1 = new G4LogicalVolume(acrylicCupWater,
-                                                             Water,
-                                                             "acrylicCup1");
+    Ra = new G4RotationMatrix();
+    Ta = G4ThreeVector(0,0, (Const::pmtRadius + 1*mm)/2.);
 
-    G4LogicalVolume *acrylicCupWaterLogical2 = new G4LogicalVolume(acrylicCupWater,
-                                                             Water,
-                                                             "acrylicCup2");
+    G4VSolid *acrylicCupWater = new G4SubtractionSolid("acrylicCupWater",
+                                                       acrylicCupWater_raw,
+                                                       pmtSphereSolid,
+                                                       Ra,
+                                                       Ta);
+
+
+
+    acrylicCupWaterLogical1 = new G4LogicalVolume(acrylicCupWater,
+                                                  Water,
+                                                  "acrylicCupWater1");
+
+    acrylicCupWaterLogical2 = new G4LogicalVolume(acrylicCupWater,
+                                                  Water,
+                                                  "acrylicCupWater2");
+
+    acrylicCupWaterLogical1->SetSensitiveDetector(LSD);
+    acrylicCupWaterLogical2->SetSensitiveDetector(LSD);
 
 
     new G4PVPlacement(0,
@@ -321,12 +342,13 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
                                        pi/2,
                                        pi/2);
 
-    G4LogicalVolume *pmtSphereLogical1 = new G4LogicalVolume(pmtSphere,
-                                                            SiO2,
-                                                            "pmtSphere");
-    G4LogicalVolume *pmtSphereLogical2 = new G4LogicalVolume(pmtSphere,
-                                                            SiO2,
-                                                            "pmtSphere");
+
+    pmtSphereLogical1 = new G4LogicalVolume(pmtSphere,
+                                            SiO2,
+                                            "pmtSphere1");
+    pmtSphereLogical2 = new G4LogicalVolume(pmtSphere,
+                                            SiO2,
+                                            "pmtSphere2");
 
 
     new G4PVPlacement(0,
@@ -378,6 +400,11 @@ void DetectorConstruction::DefineOpticalBorders()
 
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
+
+    new G4LogicalSkinSurface("DetectorAbsSurface",
+                                         pmtSphereLogical1, OpVolumeKillSurface);
+    new G4LogicalSkinSurface("DetectorAbsSurface",
+                                         pmtSphereLogical2, OpVolumeKillSurface);
 
     //    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
     //        new G4LogicalSkinSurface("DetectorAbsSurface",

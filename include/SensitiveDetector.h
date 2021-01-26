@@ -19,8 +19,6 @@
 #include "HitDataStructure.hh"
 #include "EventAction.h"
 
-
-
 class G4HCofThisEvent;
 class G4Step;
 class G4TouchableHistory;
@@ -31,7 +29,7 @@ public:
     virtual ~SensitiveDetector();
 
 
-    void Initialize();
+    void Initialize(G4HCofThisEvent*);
 
 	G4bool ProcessHits(G4Step*, G4TouchableHistory*);
 
@@ -42,6 +40,8 @@ private:
 
     G4String SDname;
     EventAction* _eventAction;
+
+    HitsCollection* OpticalPhotonCollection;
 
 };
 

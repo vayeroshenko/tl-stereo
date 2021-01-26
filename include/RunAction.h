@@ -43,7 +43,7 @@ public:
 //    G4int _nPart;
     G4int _EventID;
     G4int _nSec;
-    G4int _nPhot[2];
+    G4int _nPhot;
 
     static const G4int _nPartMax = 200000;
 //    G4int _TrackID[_nPartMax];
@@ -67,15 +67,17 @@ public:
     G4float _muInitDirY;
     G4float _muInitDirZ;
 
+    G4int _muPDGid;
+
+    G4int _muIsDecay;
     G4float _muInitEnergy;
-    G4float _muIsDecay;
+    G4float _muDecayTime;
     G4int _pmt1nPhot;
     G4int _pmt2nPhot;
-    G4float _pmt1T[_nPartMax];
-    G4int _pmt1motherID[_nPartMax];
 
-    G4float _pmt2T[_nPartMax];
-    G4int _pmt2motherID[_nPartMax];
+    G4float _photonTime[_nPartMax];
+    G4int _photonParentID[_nPartMax];
+    G4int _photonDetectorID[_nPartMax];
 
 
 

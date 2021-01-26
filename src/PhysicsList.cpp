@@ -71,7 +71,6 @@ void PhysicsList::ConstructOp()
             pmanager->SetProcessOrdering(theDecayProcess, idxPostStep);
             pmanager->SetProcessOrdering(theDecayProcess, idxAtRest);
         }
-
         if (particleName == "mu-"){
             particle->GetDecayTable()->Insert(mode_minus);
             pmanager->AddProcess(theDecayProcess);
@@ -80,7 +79,7 @@ void PhysicsList::ConstructOp()
         }
         if (theCerenkovProcess->IsApplicable(*particle)) {
             G4cout << "Add Cerenkov process to " << particleName << G4endl;
-            //            pmanager->AddProcess(theCerenkovProcess);
+            pmanager->AddProcess(theCerenkovProcess);
             pmanager->SetProcessOrdering(theCerenkovProcess, idxPostStep);
         }
         if (particleName == "opticalphoton") {

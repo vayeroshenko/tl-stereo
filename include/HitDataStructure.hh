@@ -4,18 +4,17 @@
 
 struct HitData
 {
-//  G4int TrackID;
-//  G4int ParentID;
-//  G4int PdgID;
-  G4int StationID;
-//  G4double Energy;
-//  G4double Time;
-  G4double X;
-  G4double Y;
-  G4double Z;
-//  G4double Px;
-//  G4double Py;
-//  G4double Pz;
-//  G4double Momentum;
+
+    G4int photonDetID;
+
+    G4float photonTime;
+    G4float photonWavelength;
+    G4float photonMotherID;
+
+    G4float X;
+    G4float Y;
+    G4float Z;
+
+
 };
 

@@ -79,6 +79,16 @@ private:
 
     EventAction *_eventAction;
 
+    G4LogicalVolume *acrylicBoxLogical;
+    G4LogicalVolume *acrylicCupWaterLogical1;
+    G4LogicalVolume *acrylicCupWaterLogical2;
+
+    G4LogicalVolume *pmtSphereLogical1;
+    G4LogicalVolume *pmtSphereLogical2;
+
+    G4RotationMatrix *Ra;
+    G4ThreeVector Ta;
+
 
 
 };

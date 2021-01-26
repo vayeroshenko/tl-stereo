@@ -14,32 +14,32 @@
 #include "G4VisAttributes.hh"
 #include "G4UnitsTable.hh"
 
-G4Allocator<Hit> HitAllocator;
+G4Allocator<myHit> HitAllocator;
 
-Hit::Hit() :
+myHit::myHit() :
     G4VHit()
 {}
 
-Hit::~Hit() {}
+myHit::~myHit() {}
 
-Hit::Hit(const Hit& right) :
+myHit::myHit(const myHit& right) :
     G4VHit()
 {
     myData = right.myData;
 }
 
-const Hit& Hit::operator=(const Hit& right)
+const myHit& myHit::operator=(const myHit& right)
 {
     myData = right.myData;
     return *this;
 }
 
-G4int Hit::operator==(const Hit& right) const
+G4int myHit::operator==(const myHit& right) const
 {
     return (this == &right) ? 1 : 0;
 }
 
-void Hit::Draw()
+void myHit::Draw()
 {
     G4VVisManager* pVVisManager = G4VVisManager::GetConcreteInstance();
     if (pVVisManager) {
@@ -55,7 +55,7 @@ void Hit::Draw()
     }
 }
 
-void Hit::Print()
+void myHit::Print()
 {
     /*
   G4cout << "Hit Print: "

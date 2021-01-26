@@ -42,29 +42,53 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep) {
     G4VPhysicalVolume* aPostPV = aPostPoint->GetPhysicalVolume();
 
 
-    // Further operations are only for optical photons
+    // Further operations are NOT for optical photons
     G4ParticleDefinition* particleType = aTrack->GetDefinition();
-    if (particleType != G4OpticalPhoton::OpticalPhotonDefinition())
+    if (particleType == G4OpticalPhoton::OpticalPhotonDefinition())
         return;
 
     // Check if particle trying to escape the World
     if (!aPostPV) return;
 
+
+    // Muon triggers: volume penetration trigger and muon decay inside trigger
+    if (particleType->GetPDGEncoding() == 13 || particleType->GetPDGEncoding() == -13){
+        if (_muTrigg == false &&
+                (aPostPV->GetLogicalVolume()->GetName() == "waterBox" || aPostPV->GetLogicalVolume()->GetName() == "acrylicBox"))
+            _muTrigg = true;
+        if ( _muIsDecay == false &&
+             (aPostPoint->GetProcessDefinedStep()->GetProcessName() == "muMinusCaptureAtRest" ||
+              aPostPoint->GetProcessDefinedStep()->GetProcessName() == "muPlusCaptureAtRest") &&
+             (aPostPV->GetLogicalVolume()->GetName() == "waterBox" || aPostPV->GetLogicalVolume()->GetName() == "acrylicBox") )
+            _muIsDecay = true;
+    }
+
+
+    // Measure the time of muon decay
+    if (particleType->GetPDGEncoding() == 14 || particleType->GetPDGEncoding() == -14){
+//        G4cout << (aTrack->GetGlobalTime() - aTrack->GetLocalTime()) / ns << G4endl;
+        _muDecayTime = (aTrack->GetGlobalTime() - aTrack->GetLocalTime());
+    }
+
+
+
+
+
     // TO BE REVIEWED, GONNA BE A MISTAKE HERE///////////////////////////////
-//    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
+    //    if(!aPostPV->GetLogicalVolume()->GetSensitiveDetector()) return;
     ////////////////////////////////////////////////////////////////////////
 
     // Killing downstream particles
-//    if (aPrePoint->GetPosition().z() > 50.*cm) {
-//        aTrack->SetTrackStatus(fStopAndKill);
-//        return;
-//    }
+    //    if (aPrePoint->GetPosition().z() > 50.*cm) {
+    //        aTrack->SetTrackStatus(fStopAndKill);
+    //        return;
+    //    }
 
     // Killing charged particles bellow 20 MeV
-//    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
-//        aTrack->SetTrackStatus(fStopAndKill);
-//        return;
-//    }
+    //    if (aPrePoint->GetCharge() != 0. && aPrePoint->GetMomentum().mag() < 20.*MeV ) {
+    //        aTrack->SetTrackStatus(fStopAndKill);
+    //        return;
+    //    }
 
     // Getting probability of internal reflection
     if (_particleID != trackID) {
@@ -99,7 +123,7 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     if (aPostPoint->GetStepStatus() == fGeomBoundary) {
         G4String sdName = "LSD";
-//        G4double flat = G4UniformRand();
+        //        G4double flat = G4UniformRand();
         switch(boundaryStatus) {
         case Absorption:
             break;
@@ -108,12 +132,12 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep) {
             break;
         case TotalInternalReflection:
             // Actually check if particle is reflected
-//            if (flat > _probOfReflection) {
-//                G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
-//                aNonConstTrack->SetTrackStatus(fStopAndKill);
-////                G4cout << "KILL THAT BASTARD \n";
-//            }
-//            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
+            //            if (flat > _probOfReflection) {
+            //                G4Track* aNonConstTrack = const_cast<G4Track*>(aTrack);
+            //                aNonConstTrack->SetTrackStatus(fStopAndKill);
+            ////                G4cout << "KILL THAT BASTARD \n";
+            //            }
+            //            G4cout << "TOTAL INTERNAL REFLECTION"<< G4endl;
             break;
         case SpikeReflection:
             break;
@@ -128,7 +152,21 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep) {
     return;
 }
 void SteppingAction::ResetPerEvent(){
+    _muInitPosX = 0;
+    _muInitPosY = 0;
+    _muInitPosZ = 0;
+    _muInitDirX = 0;
+    _muInitDirY = 0;
+    _muInitDirZ = 0;
 
+    _muPDGid = 0.;
+    _muInitEnergy = 0;
+    _muIsDecay = 0;
+    _pmt2nPhot = 0;
+    _pmt1nPhot = 0;
+
+    _muTrigg = false;
+    _muIsDecay = false;
 }
 
 void SteppingAction::Reset()
@@ -139,7 +177,7 @@ void SteppingAction::Reset()
 
 // This metod is stolen from Leonid's code
 void SteppingAction::InternalReflectionProbability(G4double energy,
-                                                     G4double& probability)
+                                                   G4double& probability)
 {
     probability = 1.0;
 
@@ -186,6 +224,6 @@ void SteppingAction::InternalReflectionProbability(G4double energy,
     probability = probability*.9992;
 
 
-     probability = 0;
+    probability = 0;
 }
 

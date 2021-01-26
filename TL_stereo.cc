@@ -23,6 +23,7 @@
 #include "EventAction.h"
 #include "SteppingAction.h"
 #include "PhysicsList.h"
+#include "StackingAction.hh"
 
 
 #include "Randomize.hh"
@@ -65,7 +66,13 @@ int main(int argc, char** argv)
     SteppingAction* stepAction = new SteppingAction(genAction);
 	runManager->SetUserAction(stepAction);
 
+    StackingAction* stackingAction = new StackingAction();
+
     EventAction* eventAction = new EventAction(runAction, stepAction);
+    eventAction->SetPrimGenerator(genAction);
+    eventAction->SetStackingAction(stackingAction);
+
+
 	runManager->SetUserAction(eventAction);
     detector->SetEventAction(eventAction);
 

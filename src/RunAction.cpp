@@ -45,30 +45,33 @@ void RunAction::BeginOfRunAction(const G4Run* run)
     // Event ID
     tree->Branch("EventID",  &_EventID,  "EventID/I");
 
-    tree->Branch("muInitPosX");
-    tree->Branch("muInitPosY");
-    tree->Branch("muInitPosZ");
-    tree->Branch("muInitDirX");
-    tree->Branch("muInitDirY");
-    tree->Branch("muInitDirZ");
+    tree->Branch("muInitPosX", &_muInitPosX, "muInitPosX/F");
+    tree->Branch("muInitPosY", &_muInitPosY, "muInitPosY/F");
+    tree->Branch("muInitPosZ", &_muInitPosZ, "muInitPosZ/F");
+    tree->Branch("muInitDirX", &_muInitDirX, "muInitDirX/F");
+    tree->Branch("muInitDirY", &_muInitDirY, "muInitDirY/F");
+    tree->Branch("muInitDirZ", &_muInitDirZ, "muInitDirZ/F");
 
-    tree->Branch("muInitEnergy");
 
-    tree->Branch("muIsDecay");
+    tree->Branch("muPDGid", &_muPDGid, "muPDGid/I");
 
-    tree->Branch("pmt1nPhot");
-    tree->Branch("pmt2nPhot");
+    tree->Branch("muInitEnergy", &_muInitEnergy, "muInitEnergy/F");
+//    tree->Branch("muDecayEnergy");
 
-    tree->Branch("pmt1T[pmt1nPhot]");
-    tree->Branch("pmt1motherID[pmt1nPhot]");
+    tree->Branch("muIsDecay", &_muIsDecay, "muIsDecay/I");
+    tree->Branch("muDecayTime", &_muDecayTime, "muDecayTime/F");
 
-    tree->Branch("pmt2T[pmt2nPhot]");
-    tree->Branch("pmt2motherID[pmt2nPhot]");
+    tree->Branch("pmt1nPhot", &_pmt1nPhot, "pmt1nPhot/I");
+    tree->Branch("pmt2nPhot", &_pmt2nPhot, "pmt2nPhot/I");
+    tree->Branch("nPhot", &_nPhot, "nPhot/I");
 
     // Number of photons detected in each sector
-    tree->Branch("nPhot", _nPhot, "nPhot[nSec]/I");
 
-    // Branches filled for each HIT (commented due to "optimization")
+    // Branches filled for each HIT
+
+    tree->Branch("photonTime[nPhot]", _photonTime, "photonTime[nPhot]/F");
+    tree->Branch("photonParentID[nPhot]" , _photonParentID, "photonParentID[nPhot]/I");
+    tree->Branch("photonDetectorID[nPhot]", _photonDetectorID, "photonDetectorID[nPhot]/I");
 
 
     G4cout << "BeginOfRunAction end" << G4endl;

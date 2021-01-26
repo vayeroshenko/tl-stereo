@@ -12,30 +12,42 @@
 SensitiveDetector::SensitiveDetector(G4String name, EventAction *evAct) :
     G4VSensitiveDetector(name), _eventAction(evAct){
 
+    //  G4RunManager* runManager = G4RunManager::GetRunManager();
+    G4String HCname;
+    collectionName.insert(HCname="OpticalPhotonCollection");
+
     G4cout << "Sensitive detector created" << G4endl;
 }
 
 SensitiveDetector::~SensitiveDetector() {
 }
 
-void SensitiveDetector::Initialize()
+void SensitiveDetector::Initialize(G4HCofThisEvent* HCE)
 {
 
-    //  G4cout << "___________________________ Detector initialized" << G4endl;
+    OpticalPhotonCollection =
+            new HitsCollection(SensitiveDetectorName, collectionName[0]);
+    static G4int HCID = -1;
+    if (HCID < 0) {
+        HCID = G4SDManager::GetSDMpointer()->GetCollectionID(collectionName[0]);
+    }
+    HCE->AddHitsCollection(HCID, OpticalPhotonCollection);
+
+
 }
 
 
-G4bool SensitiveDetector::ProcessHitsL(G4Step* aStep, G4TouchableHistory* hist) {
+G4bool SensitiveDetector::ProcessHitsL(G4Step* aStep,
+                                       G4TouchableHistory* hist) {
     return ProcessHits(aStep, hist);
 }
 
 G4bool SensitiveDetector::ProcessHits(G4Step* aStep,
-                                        G4TouchableHistory*)
+                                      G4TouchableHistory*)
 {
 
 
-//    G4cout << "Hit!" << G4endl;
-
+    //    G4cout << "Hit!" << G4endl;
 
     // Getting a track from hit
     G4Track* aTrack = aStep->GetTrack();
@@ -62,28 +74,24 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,
     if (aParticle->GetDefinition()->GetParticleName() != "opticalphoton")
         return false;
 
+    if ( (PostName == "pmtSphere1" || PostName == "pmtSphere2") &&
+         (PreName == "acrylicCupWater1" || PreName == "acrylicCupWater2")) {
 
-    // Vectors of sector's and detector's names splitted into words
-    std::vector<G4String> sectorWords;
-    std::vector<G4String> detectorWords;
+        HitData hitInfo;
+        myHit *newHit = new myHit();
+        newHit->myData = hitInfo;
 
-    // Splitting a string into words
-    splitName(PreName, sectorWords);
-    splitName(PostName, detectorWords);
+        newHit->myData.photonTime = aTrack->GetGlobalTime();
+        newHit->myData.photonWavelength = hbarc / twopi / aParticle->GetTotalEnergy() / nm;
+        newHit->myData.photonMotherID = aTrack->GetParentID();
 
+        if ( PostName == "pmtSphere1")
+            newHit->myData.photonDetID = 1;
+        if ( PostName == "pmtSphere2")
+            newHit->myData.photonDetID = 2;
 
-    // Sector ID discrimination for the hit
-//    if (sectorWords[0] == "sector" && detectorWords[0] == "detector") {
-//        G4int stationID = atoi(detectorWords[2]);
-//        _eventAction->InsertPhoton(stationID);
-//    }
-    if (sectorWords[0] == "window" && detectorWords[0] == "detector") {
-        G4int stationID = atoi(detectorWords[2]);
-        _eventAction->InsertPhoton(stationID);
+        OpticalPhotonCollection->insert(newHit);
     }
-
-    else return false;
-
 
     return true;
 }

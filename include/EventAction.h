@@ -12,6 +12,7 @@
 #include "RunAction.h"
 #include "Hit.h"
 #include "SteppingAction.h"
+#include "StackingAction.hh"
 
 class G4Event;
 
@@ -28,6 +29,7 @@ public:
     virtual void    EndOfEventAction(const G4Event* );
 
     void SetPrimGenerator(PrimaryGeneratorAction *gen){_primGenerator = gen;}
+    void SetStackingAction(StackingAction *stack){_stackingAction = stack;}
     inline void InsertPhoton(G4int secID){ _nPhot[secID] ++; }
 
 private:
@@ -35,8 +37,10 @@ private:
     SteppingAction* _steppingAction;
     G4int printModulo;
     G4int theCollectionID;
+    G4int thePhotonCollectionID;
 
     G4int _nPhot[2];
 
     PrimaryGeneratorAction* _primGenerator;
+    StackingAction* _stackingAction;
 };

@@ -29,5 +29,26 @@ private:
 
     void InternalReflectionProbability(G4double energy,
                                        G4double& probability);
+
+public:
+
+    G4bool _muTrigg;
+
+    G4float _muInitPosX;
+    G4float _muInitPosY;
+    G4float _muInitPosZ;
+    G4float _muInitDirX;
+    G4float _muInitDirY;
+    G4float _muInitDirZ;
+
+    G4int _muPDGid;
+
+    G4float _muIsDecay;
+    G4float _muDecayTime;
+    G4float _muInitEnergy;
+    G4int _pmt1nPhot;
+    G4int _pmt2nPhot;
+
 };
+
 

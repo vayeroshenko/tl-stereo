@@ -13,13 +13,14 @@ muon_gen::~muon_gen(){
 void muon_gen::generate_muon(){
     position[0] = 0;
     position[1] = 0;
-    position[2] = 1300. *mm;
+//    position[2] = 1300. *mm;
+    position[2] = 0. *mm;
 
     direction[0] = 0;
     direction[1] = 0;
     direction[2] = -1.;
 
-    energy = 300. *MeV;
+    energy = 1. *MeV;
 
     pdgID = 13;
 //    pdgID = -13;

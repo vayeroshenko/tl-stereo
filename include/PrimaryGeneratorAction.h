@@ -48,6 +48,8 @@ public:
 public:
     void GeneratePrimaries(G4Event* anEvent);
 
+    muon_gen *generator;
+
 private:
     //    bool GetEvent(Pythia8::Event event);
 
@@ -61,7 +63,6 @@ private:
 
     G4int iEv;
 
-    muon_gen *generator;
 
     // Pythia generator declaration
     //    Pythia8::Pythia pythia;
