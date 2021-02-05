@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Const.hh"
+#include "TRandom3.h"
 
 class muon_gen
 {
@@ -17,5 +18,11 @@ public:
     G4float energy;
 
     G4int pdgID;
+
+private:
+   TRandom3 *rgen;
+
+private:
+   G4double genCos2dist();
 
 };

@@ -74,7 +74,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
     if (0 == THC) return;
 
-//    G4int nTotPhot = _stackingAction->GetTotPhotNum();
+    //    G4int nTotPhot = _stackingAction->GetTotPhotNum();
     G4int nHit = -1;
     nHit = THC->entries();
 
@@ -87,6 +87,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
 
     for (G4int i = 0; i < nHit; i++) {
         runAction->_photonTime[i] = (*THC)[i]->myData.photonTime / ns;
+        runAction->_photonWavelength[i] = (*THC)[i]->myData.photonWavelength / nm;
         runAction->_photonDetectorID[i] = (*THC)[i]->myData.photonDetID;
         runAction->_photonParentID[i] = (*THC)[i]->myData.photonMotherID;
         if (runAction->_photonDetectorID[i] == 1)
@@ -118,8 +119,8 @@ void EventAction::EndOfEventAction(const G4Event* event)
     runAction->_muPDGid = _primGenerator->generator->pdgID;
 
 
-
-    runAction->tree->Fill();
+    if (runAction->_nPhot != 0 && runAction->_muIsDecay)
+        runAction->tree->Fill();
 
     //	G4cout << "End of event" << G4endl;
 }

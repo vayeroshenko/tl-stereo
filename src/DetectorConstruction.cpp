@@ -112,6 +112,15 @@ void DetectorConstruction::DefineMateials() {
      0.99701966 ,0.99670255 ,0.996342167,0.995931242,0.995461041,
      0.994921022,0.994298396,0.993577567,0.992739402,0.991760297,
      0.990610945};
+//    G4double WaterAbsorption[num] =
+//    {0.142087,0.106061,0.0834869,0.0683827,0.0552737,
+//     0.0452757,0.0391016,0.0295795,0.0223762,0.0188202,
+//     0.0169115,0.0160251,0.0149865,0.0142009,0.0143828,
+//     0.0147581,0.0149400,0.0151273,0.0170301,0.0194281,
+//     0.0253021,0.0342960,0.0458629,0.0502813,0.0536883 ,
+//     0.0588657 ,0.0645651 ,0.0653863,0.0807698,0.0921587,
+//     0.108020,0.146411,0.235745,0.287300,0.306713,
+//     0.310492};
 
     for (int i=0; i<num; i++) {
         //        WaveLength[i] = (300 + i*10)*nanometer;
@@ -125,6 +134,7 @@ void DetectorConstruction::DefineMateials() {
          mean free path length - taken as probablility equal 1/e
          that the photon will be absorbed */
 
+//        WaterAbsorption[i] = (-1)/log(WaterAbsorption[i])*100*cm;
         QuartzAbsorption[i] = (-1)/log(QuartzAbsorption[i])*100*cm;
         //        QuartzAbsorption[i] = 10.*cm;
 
@@ -236,7 +246,7 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
     new G4PVPlacement(0,
                       G4ThreeVector(0,0, Const::waterBoxSizeZ /2. + Const::acrylicBoxSizeZ /2.),
                       acrylicBoxLogical,
-                      "waterBox",
+                      "acrylicBox",
                       worldLogical,
                       false,
                       0);
@@ -278,19 +288,19 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
                       0);
 
     G4VSolid *pmtSphereSolid = new G4Sphere("pmtSphere",
-                                       0.,
-                                       Const::pmtRadius + 1.*mm,
-                                       0,
-                                       twopi,
-                                       pi/2,
-                                       pi/2);
+                                            0.,
+                                            Const::pmtRadius + 1.*mm,
+                                            0,
+                                            twopi,
+                                            pi/2,
+                                            pi/2);
 
     G4VSolid *acrylicCupWater_raw = new G4Tubs("acrylicCupWater_raw",
-                                           0,
-                                           Const::pmtRadius,
-                                           (Const::pmtRadius + 1*mm)/2,
-                                           0,
-                                           twopi);
+                                               0,
+                                               Const::pmtRadius,
+                                               (Const::pmtRadius + 1*mm)/2,
+                                               0,
+                                               twopi);
 
     Ra = new G4RotationMatrix();
     Ta = G4ThreeVector(0,0, (Const::pmtRadius + 1*mm)/2.);
@@ -369,6 +379,170 @@ G4VPhysicalVolume* DetectorConstruction::DefineVolumes(){
                       false,
                       0);
 
+    G4VSolid *acrylicWallX = new G4Box("acrylicWallX",
+                                       Const::acrylicWallThickness/2.,
+                                       Const::waterBoxSizeY/2. + Const::acrylicWallThickness,
+                                       Const::waterBoxSizeZ/2. + Const::acrylicWallThickness);
+    G4VSolid *acrylicWallY = new G4Box("acrylicWallY",
+                                       Const::waterBoxSizeX/2. + Const::acrylicWallThickness,
+                                       Const::acrylicWallThickness/2.,
+                                       Const::waterBoxSizeZ/2. + Const::acrylicWallThickness);
+    G4VSolid *acrylicWallZ = new G4Box("acrylicWallZ",
+                                       Const::waterBoxSizeX/2. + Const::acrylicWallThickness,
+                                       Const::waterBoxSizeY/2. + Const::acrylicWallThickness,
+                                       Const::acrylicWallThickness/2.);
+
+    G4VSolid *mirrorX = new G4Box("mirrorX",
+                                  Const::mirrorThickness/2.,
+                                  Const::waterBoxSizeY/2. + Const::acrylicWallThickness + Const::wallGap + Const::mirrorThickness,
+                                  Const::waterBoxSizeZ/2. + Const::acrylicWallThickness + Const::wallGap + Const::mirrorThickness);
+    G4VSolid *mirrorY = new G4Box("mirrorY",
+                                  Const::waterBoxSizeX/2. + Const::acrylicWallThickness + Const::wallGap + Const::mirrorThickness,
+                                  Const::mirrorThickness/2.,
+                                  Const::waterBoxSizeZ/2. + Const::acrylicWallThickness + Const::wallGap + Const::mirrorThickness);
+    G4VSolid *mirrorZ = new G4Box("mirrorZ",
+                                  Const::waterBoxSizeX/2. + Const::acrylicWallThickness + Const::wallGap + Const::mirrorThickness,
+                                  Const::waterBoxSizeY/2. + Const::acrylicWallThickness + Const::wallGap + Const::mirrorThickness,
+                                  Const::mirrorThickness/2.);
+
+
+    acrylicWallsLogical[0] = new G4LogicalVolume(acrylicWallX,
+                                                 Acrylic,
+                                                 "acrylicWallX1");
+
+    acrylicWallsLogical[1] = new G4LogicalVolume(acrylicWallX,
+                                                 Acrylic,
+                                                 "acrylicWallX2");
+
+    acrylicWallsLogical[2] = new G4LogicalVolume(acrylicWallY,
+                                                 Acrylic,
+                                                 "acrylicWallY1");
+
+    acrylicWallsLogical[3] = new G4LogicalVolume(acrylicWallY,
+                                                 Acrylic,
+                                                 "acrylicWallY2");
+
+    acrylicWallsLogical[4] = new G4LogicalVolume(acrylicWallZ,
+                                                 Acrylic,
+                                                 "acrylicWallZ1");
+
+    mirrorsLogical[0] = new G4LogicalVolume(mirrorX,
+                                            INOX,
+                                            "mirrorX1");
+    mirrorsLogical[1] = new G4LogicalVolume(mirrorX,
+                                            INOX,
+                                            "mirrorX2");
+    mirrorsLogical[2] = new G4LogicalVolume(mirrorY,
+                                            INOX,
+                                            "mirrorY1");
+    mirrorsLogical[3] = new G4LogicalVolume(mirrorY,
+                                            INOX,
+                                            "mirrorY2");
+    mirrorsLogical[4] = new G4LogicalVolume(mirrorZ,
+                                            INOX,
+                                            "mirrorZ1");
+
+    new G4PVPlacement(0,
+                      G4ThreeVector(- Const::waterBoxSizeX/2. - Const::acrylicWallThickness/2.,
+                                    0,
+                                    0),
+                      acrylicWallsLogical[0],
+            acrylicWallsLogical[0]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(Const::waterBoxSizeX/2. + Const::acrylicWallThickness/2.,
+                                    0,
+                                    0),
+                      acrylicWallsLogical[1],
+            acrylicWallsLogical[1]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(0,
+                                    -Const::waterBoxSizeY/2. - Const::acrylicWallThickness/2.,
+                                    0),
+                      acrylicWallsLogical[2],
+            acrylicWallsLogical[2]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(0,
+                                    Const::waterBoxSizeY/2. + Const::acrylicWallThickness/2.,
+                                    0),
+                      acrylicWallsLogical[3],
+            acrylicWallsLogical[3]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(0,
+                                    0,
+                                    -Const::waterBoxSizeZ/2. - Const::acrylicWallThickness/2.),
+                      acrylicWallsLogical[4],
+            acrylicWallsLogical[4]->GetName(),
+            worldLogical,
+            false,
+            0);
+
+
+
+    new G4PVPlacement(0,
+                      G4ThreeVector(-Const::waterBoxSizeX/2. - Const::acrylicWallThickness
+                                    - Const::wallGap - Const::mirrorThickness/2.,
+                                    0,
+                                    0),
+                      mirrorsLogical[0],
+            mirrorsLogical[0]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(Const::waterBoxSizeX/2. + Const::acrylicWallThickness
+                                    + Const::wallGap + Const::mirrorThickness/2.,
+                                    0,
+                                    0),
+                      mirrorsLogical[1],
+            mirrorsLogical[1]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(0,
+                                    -Const::waterBoxSizeY/2. - Const::acrylicWallThickness
+                                    - Const::wallGap - Const::mirrorThickness/2.,
+                                    0),
+                      mirrorsLogical[2],
+            mirrorsLogical[2]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(0,
+                                    Const::waterBoxSizeY/2. + Const::acrylicWallThickness
+                                    + Const::wallGap + Const::mirrorThickness/2.,
+                                    0),
+                      mirrorsLogical[3],
+            mirrorsLogical[3]->GetName(),
+            worldLogical,
+            false,
+            0);
+    new G4PVPlacement(0,
+                      G4ThreeVector(0,
+                                    0,
+                                    -Const::waterBoxSizeZ/2. - Const::acrylicWallThickness
+                                    - Const::wallGap - Const::mirrorThickness/2.),
+                      mirrorsLogical[4],
+            mirrorsLogical[4]->GetName(),
+            worldLogical,
+            false,
+            0);
+
+
+
 
     DefineOpticalBorders();
     SetVisAttributes();
@@ -398,14 +572,30 @@ void DetectorConstruction::DefineOpticalBorders()
     VolumeKill->AddProperty("EFFICIENCY",   Ephoton, EfficiencyKill,   num1);
     OpVolumeKillSurface->SetMaterialPropertiesTable(VolumeKill);
 
+    G4OpticalSurface* OpVolumeMirrorSurface =
+            new G4OpticalSurface("VolumeMirrorSurface");
+    OpVolumeMirrorSurface->SetType(dielectric_metal);
+    OpVolumeMirrorSurface->SetFinish(polished);
+    OpVolumeMirrorSurface->SetModel(glisur);
+    G4double ReflectivityMirror[num1] = {0.98, 0.98};
+    G4double EfficiencyMirror[num1] = {0., 0};
+    G4MaterialPropertiesTable* VolumeMirror = new G4MaterialPropertiesTable();
+    VolumeMirror->AddProperty("REFLECTIVITY", Ephoton, ReflectivityMirror, num1);
+    VolumeMirror->AddProperty("EFFICIENCY", Ephoton, EfficiencyMirror, num1);
+    OpVolumeMirrorSurface->SetMaterialPropertiesTable(VolumeMirror);
+
     G4OpticalSurface* quartzSurface = new G4OpticalSurface("quartzBorder");
     quartzSurface->SetType(dielectric_dielectric);
 
     new G4LogicalSkinSurface("DetectorAbsSurface",
-                                         pmtSphereLogical1, OpVolumeKillSurface);
+                             pmtSphereLogical1, OpVolumeKillSurface);
     new G4LogicalSkinSurface("DetectorAbsSurface",
-                                         pmtSphereLogical2, OpVolumeKillSurface);
+                             pmtSphereLogical2, OpVolumeKillSurface);
 
+    for (int j = 0; j < 5; ++j)
+        new G4LogicalSkinSurface("MirrorSurface",
+                                 mirrorsLogical[j],
+                                 OpVolumeMirrorSurface);
     //    for (int j = 0; j < LConst::pmt_n_channels*2; ++j) {
     //        new G4LogicalSkinSurface("DetectorAbsSurface",
     //                                 LDetectorOut[j], OpVolumeKillSurface);

@@ -69,9 +69,10 @@ void RunAction::BeginOfRunAction(const G4Run* run)
 
     // Branches filled for each HIT
 
-    tree->Branch("photonTime[nPhot]", _photonTime, "photonTime[nPhot]/F");
-    tree->Branch("photonParentID[nPhot]" , _photonParentID, "photonParentID[nPhot]/I");
-    tree->Branch("photonDetectorID[nPhot]", _photonDetectorID, "photonDetectorID[nPhot]/I");
+    tree->Branch("photonTime", _photonTime, "photonTime[nPhot]/F");
+    tree->Branch("photonWavelength", _photonWavelength, "photonWavelength[nPhot]/F");
+    tree->Branch("photonParentID" , _photonParentID, "photonParentID[nPhot]/I");
+    tree->Branch("photonDetectorID", _photonDetectorID, "photonDetectorID[nPhot]/I");
 
 
     G4cout << "BeginOfRunAction end" << G4endl;

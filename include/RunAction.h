@@ -76,8 +76,10 @@ public:
     G4int _pmt2nPhot;
 
     G4float _photonTime[_nPartMax];
+    G4float _photonWavelength[_nPartMax];
     G4int _photonParentID[_nPartMax];
     G4int _photonDetectorID[_nPartMax];
+
 
 
 

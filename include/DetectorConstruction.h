@@ -86,6 +86,9 @@ private:
     G4LogicalVolume *pmtSphereLogical1;
     G4LogicalVolume *pmtSphereLogical2;
 
+    G4LogicalVolume *acrylicWallsLogical[5];
+    G4LogicalVolume *mirrorsLogical[5];
+
     G4RotationMatrix *Ra;
     G4ThreeVector Ta;
 

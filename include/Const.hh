@@ -19,7 +19,7 @@ namespace Const{
 // World size
 const G4double worldSizeX = 3*m;
 const G4double worldSizeY = 3*m;
-const G4double worldSizeZ = 3*m;
+const G4double worldSizeZ = 5*m;
 
 const G4double waterBoxSizeX = 420*mm;
 const G4double waterBoxSizeY = 640*mm;
@@ -30,8 +30,12 @@ const G4double acrylicBoxSizeX = 420*mm;
 const G4double acrylicBoxSizeY = 640*mm;
 const G4double acrylicBoxSizeZ = 250*mm;
 
+const G4double acrylicWallThickness = 2.*mm;
+const G4double wallGap = 200.*um;
+const G4double mirrorThickness = 1.*um;
 
 const G4double pmtRadius = 190*mm / 2.;
+
 
 }
 

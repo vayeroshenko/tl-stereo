@@ -66,9 +66,11 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep) {
 
     // Measure the time of muon decay
     if (particleType->GetPDGEncoding() == 14 || particleType->GetPDGEncoding() == -14){
-//        G4cout << (aTrack->GetGlobalTime() - aTrack->GetLocalTime()) / ns << G4endl;
-        _muDecayTime = (aTrack->GetGlobalTime() - aTrack->GetLocalTime());
-    }
+        _muDecayTime = aPrePoint->GetGlobalTime() ;
+//        G4cout << "Global time: " << aPrePoint->GetGlobalTime()  / ns << G4endl;
+//        G4cout << "Local time: " << aPrePoint->GetLocalTime() / ns << G4endl;
+//        G4cout << "Global - local: "<< (aPrePoint->GetGlobalTime() - aPrePoint->GetLocalTime()) / ns << G4endl;
+        }
 
 
 

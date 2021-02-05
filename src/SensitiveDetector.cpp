@@ -81,8 +81,8 @@ G4bool SensitiveDetector::ProcessHits(G4Step* aStep,
         myHit *newHit = new myHit();
         newHit->myData = hitInfo;
 
-        newHit->myData.photonTime = aTrack->GetGlobalTime();
-        newHit->myData.photonWavelength = hbarc / twopi / aParticle->GetTotalEnergy() / nm;
+        newHit->myData.photonTime = aPostPoint->GetGlobalTime();
+        newHit->myData.photonWavelength = hbarc * twopi / aParticle->GetTotalEnergy();
         newHit->myData.photonMotherID = aTrack->GetParentID();
 
         if ( PostName == "pmtSphere1")
