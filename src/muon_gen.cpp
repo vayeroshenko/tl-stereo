@@ -34,7 +34,10 @@ void muon_gen::generate_muon(){
     position[0] = rgen->Uniform(-Const::waterBoxSizeX * 2, Const::waterBoxSizeX * 2);
     position[1] = rgen->Uniform(-Const::waterBoxSizeY * 2, Const::waterBoxSizeY * 2);;
     position[2] = (Const::waterBoxSizeZ *1.5 ) ;
-//    position[2] = 0. *mm;
+
+//    position[0] = 0;
+//    position[1] = 0;
+//    position[2] = (Const::waterBoxSizeZ *1.5 ) ;
 
     G4double Theta = 180.0 - genCos2dist();     //deg
     //_Theta = 177.0;     //deg
@@ -44,9 +47,17 @@ void muon_gen::generate_muon(){
     direction[1] = TMath::Sin(Theta)*TMath::Sin(Phi);
     direction[2] = TMath::Cos(Theta);
 
-    energy = rgen->Uniform(100, 1000.) * MeV;
+//    direction[0] = 0;
+//    direction[1] = 0;
+//    direction[2] = -1;
 
-    pdgID = (rgen->Uniform() < 0.55 ) ? -13:  13;
+    energy = rgen->Uniform(100, 1000.) * MeV;
+//    energy = 300 * MeV;
+
+//    pdgID = (rgen->Uniform() < 0.55 ) ? -13: 13;
+    pdgID = -13;
+
+//G4cout << pdgID << G4endl;
 
 
 //    pdgID = -13;

@@ -51,14 +51,18 @@ void SteppingAction::UserSteppingAction(const G4Step* aStep) {
     if (!aPostPV) return;
 
 
+
+
     // Muon triggers: volume penetration trigger and muon decay inside trigger
     if (particleType->GetPDGEncoding() == 13 || particleType->GetPDGEncoding() == -13){
+//        G4cout << aPostPoint->GetProcessDefinedStep()->GetProcessName() << G4endl;
         if (_muTrigg == false &&
                 (aPostPV->GetLogicalVolume()->GetName() == "waterBox" || aPostPV->GetLogicalVolume()->GetName() == "acrylicBox"))
             _muTrigg = true;
         if ( _muIsDecay == false &&
              (aPostPoint->GetProcessDefinedStep()->GetProcessName() == "muMinusCaptureAtRest" ||
-              aPostPoint->GetProcessDefinedStep()->GetProcessName() == "muPlusCaptureAtRest") &&
+              aPostPoint->GetProcessDefinedStep()->GetProcessName() == "DecayWithSpin" ||
+             aPostPoint->GetProcessDefinedStep()->GetProcessName() == "Decay" ) &&
              (aPostPV->GetLogicalVolume()->GetName() == "waterBox" || aPostPV->GetLogicalVolume()->GetName() == "acrylicBox") )
             _muIsDecay = true;
     }
