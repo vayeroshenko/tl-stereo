@@ -46,7 +46,7 @@ void muon_gen::generate_muon(){
 
     energy = rgen->Uniform(100, 1000.) * MeV;
 
-    pdgID = (rgen->Uniform() > 0.55 ) ? 13:  -13;
+    pdgID = (rgen->Uniform() < 0.55 ) ? -13:  13;
 
 
 //    pdgID = -13;

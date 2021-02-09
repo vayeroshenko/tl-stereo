@@ -4,7 +4,8 @@
 
 
 void make_pulse(Int_t *out_pulse){
-	TFile *input = new TFile("../../tl-data/root/data_20210202_145240.root");
+	// TFile *input = new TFile("../../tl-data/root/data_20210202_145240.root");
+	TFile *input = new TFile("../../tl-data/root/data_20210208_160910_wf.root");
 	TTree *tree = (TTree*)input->Get("T");
 
 	Int_t Pulse1[60];
@@ -16,11 +17,9 @@ void make_pulse(Int_t *out_pulse){
 
 	// Long_t nEn = tree->GetEntries();
 
-	tree->GetEntry(5);
+	tree->GetEntry(35257);
 
 	// return Pulse1;
-
-	
 
 	for (Int_t i = 0; i < 60; ++i){
 		out_pulse[i] = Pulse1[i];
@@ -34,10 +33,7 @@ void gen_signal(TH1D *h_sig_old, Int_t *Pulse1){
 	// gROOT->Reset();
 
 
-	std::vector<std::vector<Int_t> > pulses;
-
-
-
+	// std::vector<std::vector<Int_t> > pulses;
 
 	
 	for (Int_t bin = 1; bin <= 60; ++bin){
@@ -48,10 +44,10 @@ void gen_signal(TH1D *h_sig_old, Int_t *Pulse1){
 	// pedestal correction
 	Int_t nPed = 20;
 	Double_t ped_before = 0;
-	for (Int_t bin = 1; bin <= nPed; ++bin){
-		ped_before += h_sig_old->GetBinContent(bin);
-	}
-	ped_before /= nPed;
+	// for (Int_t bin = 1; bin <= nPed; ++bin){
+	// 	ped_before += h_sig_old->GetBinContent(bin);
+	// }
+	// ped_before /= nPed;
 
 
 	for (Int_t bin = 1; bin <= 60; ++bin){
@@ -73,7 +69,7 @@ void add_phot(TH1D* sig_tot, Double_t start_time, Double_t amplitude,  Int_t* Pu
 		if (bin_sig > 0 && bin_sig <= this_phot->GetNbinsX()) 
 			sig_tot->SetBinContent(bin_tot, 
 				sig_tot->GetBinContent(bin_tot) +
-				this_phot->GetBinContent(bin_sig) /133. *amplitude);
+				this_phot->GetBinContent(bin_sig) *amplitude);
 	}
 
 	delete this_phot;
@@ -82,13 +78,16 @@ void add_phot(TH1D* sig_tot, Double_t start_time, Double_t amplitude,  Int_t* Pu
 
 
 void sig_ana(TH1D *sig_tot, Double_t results[5]){
-	Double_t threshold = 20.;
+	Double_t threshold = 500.;
 	Int_t Ntot = 50*4;
 	Int_t Ntail = 40*4;
 	Double_t sig_i, sig_i1;
 	Double_t t_i, t_i1;
 	Double_t t_mu = -1.;
 	Double_t t_e = -1.;
+
+	// sig_tot->Draw();
+	// return;
 
 
 	for (Int_t bin = 1; bin <= sig_tot->GetNbinsX(); ++bin){
@@ -211,7 +210,7 @@ void signal(){
 	output_tree->Branch("Qtail_e", &Qtail_e, "Qtail_e/D");
 	output_tree->Branch("DeltaT", &DeltaT, "DeltaT/D");
 
-	TFile *input_sim = new TFile("../build/file.root");
+	TFile *input_sim = new TFile("data.root");
 	TTree *tree_sim = (TTree*)input_sim->Get("T");
 	// tree_sim->Print();
 
@@ -279,9 +278,9 @@ void signal(){
 				if (dice >= pdeWal[i]) continue; 
 				// out_time->Fill(Time[i]);
 				
-				Double_t ampl = randGen->Gaus(133, 20);
+				Double_t ampl = randGen->Gaus(250, 50);
 
-				add_phot(out_sig, Time[i], ampl / 150., Pulse1);
+				add_phot(out_sig, Time[i], ampl / 250. / 10., Pulse1);
 				// delete entVect;
 			}
 		}

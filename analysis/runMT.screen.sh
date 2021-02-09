@@ -14,7 +14,7 @@ rm data_*
 	# cp groupMTopt.cc "temp_$i"
 	# cp ana2MT.cc "temp_$i"
 
-for i in {1..8}
+for i in {1..7}
 do
 	mkdir "temp_$i"
 	cp runMT.sh "temp_$i"
@@ -45,7 +45,7 @@ do
 done
 
 
-root -l -b -q "mergeMT.cc+(8,$nFile)" > /dev/null
+root -l -b -q "mergeMT.cc+(7,$nFile)" > /dev/null
 
 rm -rf temp*
 rm data_*
