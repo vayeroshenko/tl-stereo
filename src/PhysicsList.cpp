@@ -57,8 +57,8 @@ void PhysicsList::ConstructOp()
     G4cout<<" 111 "<<G4endl;
 
     G4Decay* theDecayProcess = new G4Decay();
-    G4VDecayChannel *mode_plus = new G4MuonDecayChannel("mu+", 1.);
-    G4VDecayChannel *mode_minus = new G4MuonDecayChannel("mu-", 1.);
+//    G4VDecayChannel *mode_plus = new G4MuonDecayChannel("mu+", 1.);
+//    G4VDecayChannel *mode_minus = new G4MuonDecayChannel("mu-", 1.);
 
     theParticleIterator->reset();
     while( (*theParticleIterator)() ) {
@@ -66,14 +66,14 @@ void PhysicsList::ConstructOp()
         G4ProcessManager* pmanager = particle->GetProcessManager();
         G4String particleName = particle->GetParticleName();
         if (particleName == "mu+"){
-            particle->GetDecayTable()->Insert(mode_plus);
-            pmanager->AddProcess(theDecayProcess);
+//            particle->GetDecayTable()->Insert(mode_plus);
+//            pmanager->AddProcess(theDecayProcess);
             pmanager->SetProcessOrdering(theDecayProcess, idxPostStep);
             pmanager->SetProcessOrdering(theDecayProcess, idxAtRest);
         }
         if (particleName == "mu-"){
-            particle->GetDecayTable()->Insert(mode_minus);
-            pmanager->AddProcess(theDecayProcess);
+//            particle->GetDecayTable()->Insert(mode_minus);
+//            pmanager->AddProcess(theDecayProcess);
             pmanager->SetProcessOrdering(theDecayProcess, idxPostStep);
             pmanager->SetProcessOrdering(theDecayProcess, idxAtRest);
         }

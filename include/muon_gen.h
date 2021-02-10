@@ -10,7 +10,8 @@ public:
     ~muon_gen();
 
 public:
-    void generate_muon();
+    void generate_cosmic();
+    void generate_debug();
 
 public:
     G4float position[3];

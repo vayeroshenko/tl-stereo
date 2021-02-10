@@ -5,8 +5,8 @@ from ROOT import (TH1D, TFile, TTree, TCanvas, TLegend)
 file_in = TFile("output.root")
 tree_in = file_in.Get("T")
 
-h_qtot_mu = TH1D("h_qtot_mu","h_qtot_mu", 100, -1000 , 20000)
-h_qtot_e = TH1D("h_qtot_e","h_qtot_e", 100, -1000, 20000)
+h_qtot_mu = TH1D("h_qtot_mu","h_qtot_mu", 200, -10000 , 200000)
+h_qtot_e = TH1D("h_qtot_e","h_qtot_e", 200, -10000, 200000)
 
 tree_in.Draw("Qtot_mu >> h_qtot_mu", "Qtot_mu > 0 && Qtot_e > 0")
 tree_in.Draw("Qtot_e >> h_qtot_e", "Qtot_mu > 0 && Qtot_e > 0")

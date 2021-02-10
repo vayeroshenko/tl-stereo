@@ -187,7 +187,7 @@ void sig_ana(TH1D *sig_tot, Double_t results[5]){
 
 void signal(){
 
-	TFile *output_file = new TFile("output.root", "RECREATE");
+	TFile *output_file = new TFile("output_plus.root", "RECREATE");
 	TTree *output_tree = new TTree("T", "T");
 
 	// [0] - Qtot muon 
@@ -210,7 +210,7 @@ void signal(){
 	output_tree->Branch("Qtail_e", &Qtail_e, "Qtail_e/D");
 	output_tree->Branch("DeltaT", &DeltaT, "DeltaT/D");
 
-	TFile *input_sim = new TFile("data.root");
+	TFile *input_sim = new TFile("data_plus.root");
 	TTree *tree_sim = (TTree*)input_sim->Get("T");
 	// tree_sim->Print();
 

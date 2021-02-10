@@ -119,7 +119,7 @@ void EventAction::EndOfEventAction(const G4Event* event)
     runAction->_muPDGid = _primGenerator->generator->pdgID;
 
 
-    if (runAction->_nPhot != 0 && runAction->_muIsDecay)
+    if (runAction->_nPhot > 0 && runAction->_muIsDecay)
         runAction->tree->Fill();
 
     //	G4cout << "End of event" << G4endl;
