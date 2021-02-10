@@ -1,0 +1,10 @@
+executable              = runCondor.sh
+arguments               = "$(Process)"
+initialdir              = ./
+transfer_input_files    = vis_file.mac
+should_transfer_files   = IF_NEEDED
+when_to_transfer_output = ON_EXIT			
+error                   = errors$(Process).txt
+log                     = log$(Process).log
++JobFlavour = "workday"
+queue 50
