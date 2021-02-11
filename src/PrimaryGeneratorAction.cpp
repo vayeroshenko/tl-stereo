@@ -27,7 +27,9 @@ PrimaryGeneratorAction::~PrimaryGeneratorAction() {
 void PrimaryGeneratorAction::GeneratePrimaries(G4Event* anEvent) {
 
 
-    generator->generate_cosmic();
+//    generator->generate_cosmic();
+    generator->generate_background();
+
 //    generator->generate_debug();
 
 

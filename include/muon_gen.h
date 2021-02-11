@@ -12,6 +12,7 @@ public:
 public:
     void generate_cosmic();
     void generate_debug();
+    void generate_background();
 
 public:
     G4float position[3];

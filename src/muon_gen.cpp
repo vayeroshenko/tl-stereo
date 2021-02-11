@@ -73,6 +73,42 @@ void muon_gen::generate_cosmic(){
     return;
 }
 
+void muon_gen::generate_background(){
+    position[0] = rgen->Uniform(-Const::waterBoxSizeX * 2, Const::waterBoxSizeX * 2);
+    position[1] = rgen->Uniform(-Const::waterBoxSizeY * 2, Const::waterBoxSizeY * 2);;
+    position[2] = (Const::waterBoxSizeZ *1.5 ) ;
+
+    Double_t power = -2.7;
+    Double_t Emin = 1*GeV;
+    Double_t Emax = 100*GeV;
+
+    G4double Theta = 180.0 - genCos2dist();     //deg
+    //_Theta = 177.0;     //deg
+    G4double Phi = rgen->Uniform(-180.0,180.0); //deg
+
+    direction[0] = TMath::Sin(Theta)*TMath::Cos(Phi);
+    direction[1] = TMath::Sin(Theta)*TMath::Sin(Phi);
+    direction[2] = TMath::Cos(Theta);
+
+
+    Double_t uniform_seed = rgen->Uniform(0., 1.);
+    energy = pow( ( pow(Emax, power+1) - pow(Emin, power+1) )*uniform_seed + pow(Emin, power+1),
+                 (1./(power+1)) );
+
+
+
+//    pdgID = (rgen->Uniform() < 0.55 ) ? -13: 13;
+    pdgID = -13;
+
+//G4cout << pdgID << G4endl;
+
+
+//    pdgID = -13;
+
+    return;
+}
+
+
 G4double muon_gen::genCos2dist(){
       Double_t theta = -999.0;//deg
       Double_t x = -999.0;
