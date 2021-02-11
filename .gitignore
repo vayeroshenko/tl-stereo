@@ -30,3 +30,16 @@
 *.exe
 *.out
 *.app
+
+# My
+CMakeLists.txt.user
+*.cmake
+screenlog.0
+G4History.macro
+Makefile
+TLStereo
+*.root
+*.heprep
+*.csv
+*.txt
+build/*

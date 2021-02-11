@@ -78,7 +78,7 @@ void add_phot(TH1D* sig_tot, Double_t start_time, Double_t amplitude,  Int_t* Pu
 
 
 void sig_ana(TH1D *sig_tot, Double_t results[5]){
-	Double_t threshold = 500.;
+	Double_t threshold = 1000.;
 	Int_t Ntot = 50*4;
 	Int_t Ntail = 40*4;
 	Double_t sig_i, sig_i1;
@@ -187,7 +187,7 @@ void sig_ana(TH1D *sig_tot, Double_t results[5]){
 
 void signal(){
 
-	TFile *output_file = new TFile("output_plus.root", "RECREATE");
+	TFile *output_file = new TFile("output_minus_1000.root", "RECREATE");
 	TTree *output_tree = new TTree("T", "T");
 
 	// [0] - Qtot muon 
@@ -210,7 +210,7 @@ void signal(){
 	output_tree->Branch("Qtail_e", &Qtail_e, "Qtail_e/D");
 	output_tree->Branch("DeltaT", &DeltaT, "DeltaT/D");
 
-	TFile *input_sim = new TFile("data_plus.root");
+	TFile *input_sim = new TFile("data_minus.root");
 	TTree *tree_sim = (TTree*)input_sim->Get("T");
 	// tree_sim->Print();
 
