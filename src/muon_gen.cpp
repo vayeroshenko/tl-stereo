@@ -79,7 +79,7 @@ void muon_gen::generate_background(){
     position[2] = (Const::waterBoxSizeZ *1.5 ) ;
 
     Double_t power = -2.7;
-    Double_t Emin = 1*GeV;
+    Double_t Emin = 10*GeV;
     Double_t Emax = 100*GeV;
 
     G4double Theta = 180.0 - genCos2dist();     //deg
@@ -93,7 +93,7 @@ void muon_gen::generate_background(){
 
     Double_t uniform_seed = rgen->Uniform(0., 1.);
     energy = pow( ( pow(Emax, power+1) - pow(Emin, power+1) )*uniform_seed + pow(Emin, power+1),
-                 (1./(power+1)) );
+                 (1./(power+1.)) );
 
 
 
