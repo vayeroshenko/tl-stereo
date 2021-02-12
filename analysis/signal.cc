@@ -117,7 +117,7 @@ void sig_ana(TH1D *sig_tot, Double_t results[5]){
 		}
 	}
 
-	std::cout << t_mu << " " << t_e << std::endl;
+	// std::cout << t_mu << " " << t_e << std::endl;
 
 	TAxis *sig_axis = sig_tot->GetXaxis();
 
@@ -187,7 +187,7 @@ void sig_ana(TH1D *sig_tot, Double_t results[5]){
 
 void signal(){
 
-	TFile *output_file = new TFile("output_minus_1000.root", "RECREATE");
+	TFile *output_file = new TFile("dummy.root", "RECREATE");
 	TTree *output_tree = new TTree("T", "T");
 
 	// [0] - Qtot muon 
@@ -210,7 +210,7 @@ void signal(){
 	output_tree->Branch("Qtail_e", &Qtail_e, "Qtail_e/D");
 	output_tree->Branch("DeltaT", &DeltaT, "DeltaT/D");
 
-	TFile *input_sim = new TFile("data_minus.root");
+	TFile *input_sim = new TFile("data_minus/minus_run1.root");
 	TTree *tree_sim = (TTree*)input_sim->Get("T");
 	// tree_sim->Print();
 
@@ -249,17 +249,24 @@ void signal(){
 	make_pulse(Pulse1);
 
 
-	TH1D *out_sig;
+		
+	TH1D *out_sig = new TH1D("out_sig","out_sig", 10000, 0, 1e4);
 	TH1D *out_time;
 
 
 	Int_t nEn = tree_sim->GetEntries();
 	for (Long_t j = 0; j < nEn; ++j) {
-		out_sig = new TH1D("out_sig","out_sig", 10000, 0, 1e4);
 		// out_time = new TH1D("out_time","out_time", 10000, 0, 1e4);
 		// tree_sim->cd();
+		if (j % 100 == 0) std::cout << "Event " << j << std::endl;
 		tree_sim->GetEntry(j);
 		if (!muIsDecay) continue;
+
+		out_sig->Reset();
+		// for (Int_t bin = 1; bin <= out_sig->GetNbinsX(); ++bin){
+		// 	out_sig->SetBinContent(bin, 0);
+		// 	// sig_i1 = sig_tot->GetBinContent(bin+1);
+		// }	
 
 		for (int i = 0; i < nPhot; ++i){
 			if (photonDetectorID[i] != 1) continue;
